@@ -1,0 +1,21 @@
+{
+  "name": "x-craper",
+  "version": "1.0.0",
+  "description": "Scraper de perfiles de Twitter usando Playwright",
+  "main": "scraper.js",
+  "type": "module",
+  "scripts": {
+    "start": "node scraper.js"
+  },
+  "keywords": [
+    "scraper",
+    "twitter",
+    "playwright"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "playwright": "^1.40.0"
+  }
+}
