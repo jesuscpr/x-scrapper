@@ -5,7 +5,7 @@
   "main": "scraper.js",
   "type": "module",
   "scripts": {
-    "build": "npx playwright install chromium",
+    "build": "npx playwright install --with-deps chromium",
     "start": "node server.js"
   },
   "engines": {
