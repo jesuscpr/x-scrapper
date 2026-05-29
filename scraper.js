@@ -9,7 +9,7 @@ dotenv.config();
 const ROTATING_PROXY = {
   enabled: true,
   server: process.env.SERVER,
-  username: process.env.USER,
+  username: process.env.PROXY_USER,
   password: process.env.PASSWORD
 };
 
@@ -77,9 +77,11 @@ async function scrapeTwitterProfile(username, options = { includeTweets: true })
     // ======================================
     const launchOptions = {
       headless: true,
-      slowMo: 0
+      slowMo: 0,
+      // Necesario en entornos Linux/contenedor (p. ej. Render)
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     };
-    
+
     // Agregar configuración de proxy si está habilitado
     if (ROTATING_PROXY.enabled) {
       launchOptions.proxy = {
@@ -163,9 +165,36 @@ async function scrapeTwitterProfile(username, options = { includeTweets: true })
     let tweets = [];
 
     if (options.includeTweets) {
+      console.log('📱 Esperando a que cargue el timeline de tweets...');
+
+      // Asegurar pestaña "Posts" (evita Replies/Media u otras vistas)
+      const postsTab = page.locator('[role="tab"]').filter({
+        hasText: /^(Posts?|Publicaciones)$/i,
+      });
+      if (await postsTab.count() > 0) {
+        await postsTab.first().click();
+      }
+
+      try {
+        await page.waitForSelector(`article[data-testid="tweet"] a[href*="/${username}/status/"]`, {
+          timeout: 15000,
+        });
+      } catch {
+        console.warn('⚠️  No aparecieron tweets del perfil en el tiempo esperado; se intentará extraer igualmente.');
+      }
+
+      // Dar tiempo a que el timeline termine de hidratar (evita huecos tipo posición 5, 8)
+      await page.waitForTimeout(2500);
+
+      // Pequeño scroll para forzar carga de tweets recientes en el viewport
+      await page.evaluate(() => window.scrollBy(0, 600));
+      await page.waitForTimeout(1500);
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(1000);
+
       console.log('📱 Extrayendo tweets...');
 
-      tweets = await page.evaluate(() => {
+      tweets = await page.evaluate((profileUsername) => {
         // Función auxiliar para extraer números
         function extractNumber(text) {
           if (!text) return 0;
@@ -184,6 +213,14 @@ async function scrapeTwitterProfile(username, options = { includeTweets: true })
 
         tweetElements.forEach((tweetEl, index) => {
           try {
+            // Ignorar sugerencias / tweets de otros perfiles en el timeline
+            const ownStatusLink = tweetEl.querySelector(
+              `a[href*="/${profileUsername}/status/"]`
+            );
+            if (!ownStatusLink) {
+              return;
+            }
+
             // Extraer texto del tweet
             const textElement = tweetEl.querySelector('[data-testid="tweetText"]');
             const text = textElement ? textElement.innerText : '';
@@ -252,6 +289,17 @@ async function scrapeTwitterProfile(username, options = { includeTweets: true })
         });
 
         return extractedTweets;
+      }, username);
+
+      // Ordenar por fecha descendente (más recientes primero; el fijado puede quedar arriba si es el más nuevo)
+      tweets.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        return dateB - dateA;
+      });
+
+      tweets.forEach((tweet, index) => {
+        tweet.position = index + 1;
       });
 
       console.log(`✅ Extraídos ${tweets.length} tweets`);
@@ -461,15 +509,4 @@ async function saveToJSON(data, filename = 'scraped_data.json') {
   console.log(`💾 Datos guardados en ${filename}`);
 }
 
-// Scrapear un perfil
-scrapeTwitterProfile('Simon_Hypixel', { includeTweets: true })
-  .then(async (data) => {
-    if (data) {
-      console.log("Datos extraidos correctamente")
-      // Guardamos los datos en un archivo json
-      await saveToJSON(data, 'extracted_data.json');
-    }
-  })
-  .catch(error => {
-    console.error('No se han podido extraer los datos:', error);
-  });
+export { scrapeTwitterProfile, saveToJSON };

@@ -1,0 +1,185 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: #000;
+  color: #e7e9ea;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+header {
+  margin-bottom: 2.5rem;
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.disclaimer {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #71767b;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #71767b;
+}
+
+.input-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid #2f3336;
+  border-radius: 9999px;
+  overflow: hidden;
+  background: #16181c;
+}
+
+.at {
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  color: #71767b;
+  font-size: 1.1rem;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: #e7e9ea;
+  font-size: 1rem;
+  padding: 0.85rem 0.5rem;
+  outline: none;
+}
+
+button[type="submit"] {
+  border: none;
+  background: #1d9bf0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0 1.25rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background: #1a8cd8;
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.status.loading {
+  color: #1d9bf0;
+}
+
+.status.error {
+  color: #f4212e;
+}
+
+.results {
+  margin-top: 2rem;
+}
+
+.profile-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #2f3336;
+}
+
+.profile-card img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #2f3336;
+}
+
+.profile-card .meta h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+}
+
+.profile-card .meta .handle {
+  color: #71767b;
+  font-size: 0.9rem;
+}
+
+.profile-card .bio {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.profile-card .counts {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #71767b;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  color: #71767b;
+  border-bottom: 1px solid #2f3336;
+}
+
+.tweets-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tweet {
+  padding: 1rem 0;
+  border-bottom: 1px solid #2f3336;
+}
+
+.tweet p {
+  margin: 0 0 0.5rem;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.tweet .metrics {
+  font-size: 0.8rem;
+  color: #71767b;
+}
+
+.tweet .date {
+  font-size: 0.8rem;
+  color: #71767b;
+  margin-bottom: 0.35rem;
+}

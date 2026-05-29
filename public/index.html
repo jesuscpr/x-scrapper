@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>X Scraper</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>X SCRAPER</h1>
+      <h2>IMPORTANTE</h2>
+      <h3>La primera busqueda tardará más de lo normal ya que está alojado en render de forma gratuita y este servicio se apaga cada pocos minutos.</h3>
+      <p class="disclaimer">
+        Este scraper es solo para aprender; por ello solo selecciona algunos tweets del perfil y no todos,
+        ya que no queremos sobrepasar los rate limits ni hacer algo
+        no permitido como scrapear el perfil completo.
+      </p>
+    </header>
+
+    <form id="scrape-form">
+      <label for="username">Usuario de X</label>
+      <div class="input-row">
+        <span class="at">@</span>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="nombre_usuario"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" id="submit-btn">Scrapear</button>
+      </div>
+    </form>
+
+    <p id="status" class="status" hidden></p>
+
+    <section id="results" class="results" hidden>
+      <article id="profile-card" class="profile-card"></article>
+      <div id="stats" class="stats"></div>
+      <ul id="tweets-list" class="tweets-list"></ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

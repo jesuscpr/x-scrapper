@@ -1,0 +1,12 @@
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: x-scraper
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22.14.0
